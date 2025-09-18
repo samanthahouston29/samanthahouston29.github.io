@@ -1,11 +1,17 @@
 html {
     --text: #ffffff;
 --background: #ffffff;
---primary: #3b0000;
---secondary: #3b0000;
+--primary: #bb5151;
+--secondary: #ffffff;
 --accent: #000000;
 }
 body {
     color: var(--text);
     background-color: var(--backround);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+h1,
+h2,
+h3 {
+    color: var(--primary);
 }
