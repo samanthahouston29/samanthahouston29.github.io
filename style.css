@@ -1,4 +1,4 @@
-html {
+:root {
     --text: #000000;
 --background: #fbfbfe;
 --primary: #000000;
@@ -9,4 +9,13 @@ html {
 body {
     color: var(--text);
     backround: var(--backround);
+    font-family: Racing Sans One
 }
+
+h1,
+h2,
+h3 {
+    color: var(--primary);
+    font-family: "Racing Sans One"
+}
+
