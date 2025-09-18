@@ -1,8 +1,8 @@
 html {
-    --text: #ffffff;
+    --text: #000000ff;
 --background: #ffffff;
---primary: #bb5151;
---secondary: #ffffff;
+--primary: #490101;
+--secondary: #3d1e1e;
 --accent: #000000;
 }
 body {
