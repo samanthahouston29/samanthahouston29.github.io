@@ -8,8 +8,8 @@
 
 body {
     color: var(--text);
-    backround: var(--backround);
-    font-family: Racing Sans One
+    background: var(--background);
+    font-family: "Racing Sans One"
 }
 
 h1,
