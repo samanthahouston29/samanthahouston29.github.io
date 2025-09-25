@@ -36,3 +36,11 @@ p {
     font-weight: 100;
     font-style: normal;
 }
+
+img:hover {
+    transform: rotate(-7200deg);
+    filter: hue-rotate(7200deg)
+}
+img {
+    transition: linear 2s;
+}
