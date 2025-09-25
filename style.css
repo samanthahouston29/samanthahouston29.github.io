@@ -7,8 +7,12 @@
 }
 
 *{
-    border: 1px solid blue;
+    border: 2px solid blue;
+    border-radius: 1.5cap;
     padding-top: 1ch;
+    padding-bottom: 1ch;
+    padding-right: 1ch;
+    padding-left: 1ch;
     margin: 5% 0;
 }
 
