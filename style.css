@@ -38,8 +38,8 @@ p {
 }
 
 img:hover {
-    transform: rotate(-72000000deg);
-    filter: hue-rotate(72000000deg)
+    transform: rotate(-72000000000000deg);
+    filter: hue-rotate(72000000000000deg);
 }
 img {
     transition: linear 10s;
