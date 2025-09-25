@@ -38,9 +38,9 @@ p {
 }
 
 img:hover {
-    transform: rotate(-7200deg);
-    filter: hue-rotate(7200deg)
+    transform: rotate(-72000000deg);
+    filter: hue-rotate(72000000deg)
 }
 img {
-    transition: linear 2s;
+    transition: linear 10s;
 }
