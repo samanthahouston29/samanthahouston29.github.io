@@ -1,12 +1,12 @@
 :root {
     --text: #020068;
---background: #ffffff;
---primary: #07006d;
---secondary: #0306a5;
---accent: #0c0750;
+    --background: #ffffff;
+    --primary: #07006d;
+    --secondary: #0306a5;
+    --accent: #0c0750;
 }
 
-*{
+* {
     border: 2px solid blue;
     border-radius: 1.5cap;
     padding-top: 1ch;
@@ -26,8 +26,8 @@ h1,
 h2,
 h3,
 {
-    color: var(--primary);
-    font-family: "Racing Sans One"
+color: var(--primary);
+font-family: "Racing Sans One"
 }
 
 li,
@@ -41,6 +41,18 @@ img:hover {
     transform: rotate(-72000000000000deg);
     filter: hue-rotate(72000000000000deg);
 }
+
 img {
-    transition: linear 10s;
+    /* transition: linear 10s; */
+    animation: 0.1s spin infinite linear;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
