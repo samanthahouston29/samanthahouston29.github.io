@@ -36,23 +36,3 @@ p {
     font-weight: 100;
     font-style: normal;
 }
-
-img:hover {
-    transform: rotate(-72000000000000deg);
-    filter: hue-rotate(72000000000000deg);
-}
-
-img {
-    /* transition: linear 10s; */
-    animation: 0.1s spin infinite linear;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
