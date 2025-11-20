@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Widget</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        section {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        button {
+            margin-top: 1rem;
+        }
+
+        .output {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Fun Generator</h1>
+
+    <section id="car">
+        <h2>Car:</h2>
+        <button id="btnCar">Click Me!</button>
+        <div class="output" id="carOutput"></div>
+        <span id="carName"></span><br>
+        <img id="carImage" src="" alt="Image of a car" style="max-width:300px;display:none;">
+    </section>
+    <script>
+        const btnCar = document.getElementById("btnCar");
+        const carName = document.getElementById("carName");
+        const carImage = document.getElementById("carImage");
+        const cars = [
+        { name: "296 GTB", image: "file" },
+        { name: "SF90 Stradale", image: "file" },
+        { name: "Roma", image: "file" },
+        { name: "Portofino M", image: "file" },
+        { name: "F8 Tributo", image: "file" },
+        { name: "812 Superfast", image: "file" },
+        { name: "F40", image: "file" },
+        { name: "F50", image: "file" },
+        { name: "Enzo", image: "file" },
+        { name: "LaFerrari", image: "file" },
+        { name: "Huracán", image: "file" },
+        { name: "Revuelto", image: "file" },
+        { name: "Aventador", image: "file" },
+        { name: "Murciélago", image: "file" },
+        { name: "Gallardo", image: "file" },
+        { name: "Miura", image: "file" },
+        { name: "Countach", image: "file" },
+        { name: "911", image: "file" },
+        { name: "718 Cayman", image: "file" },
+        { name: "718 Boxster", image: "file" },
+        { name: "Taycan", image: "file" },
+        { name: "959", image: "file" },
+        { name: "Carrera GT", image: "file" },
+        { name: "Artura", image: "file" },
+        { name: "750S", image: "file" },
+        { name: "GT", image: "file" },
+        { name: "P1", image: "file" },
+        { name: "F1", image: "file" },
+        { name: "600LT", image: "file" },
+        { name: "Vantage", image: "file" },
+        { name: "DB12", image: "file" },
+        { name: "DBS Superleggera", image: "file" },
+        { name: "DB5", image: "file" },
+        { name: "Vanquish", image: "file" },
+        { name: "Chiron", image: "file" },
+        { name: "Bolide", image: "file" },
+        { name: "Veyron", image: "file" },
+        { name: "EB110", image: "file" },
+        { name: "Corvette C8", image: "file" },
+        { name: "Camaro ZL1", image: "file" },
+        { name: "Mustang", image: "file" },
+        { name: "Ford GT", image: "file" },
+        { name: "Viper", image: "file" },
+        { name: "Challenger SRT Demon", image: "file" },
+        { name: "M2", image: "file" },
+        { name: "M4", image: "file" },
+        { name: "M8 Competition", image: "file" },
+        { name: "Z4", image: "file" },
+        { name: "R8", image: "file" },
+        { name: "TT RS", image: "file" },
+        { name: "AMG GT", image: "file" },
+        { name: "SL Roadster", image: "file" },
+        { name: "GT-R", image: "file" },
+        { name: "Z", image: "file" },
+        { name: "GR Supra", image: "file" },
+        { name: "GR86", image: "file" },
+        { name: "MX-5 Miata", image: "file" },
+        { name: "NSX", image: "file" },
+        { name: "Integra Type S", image: "file" },
+        { name: "Emira", image: "file" },
+        { name: "Evija", image: "file" },
+        { name: "Elise", image: "file" },
+        { name: "Exige", image: "file" },
+        { name: "4C", image: "file" },
+        { name: "8C Competizione", image: "file" },
+        { name: "Giulia Quadrifoglio", image: "file" },
+        { name: "MC20", image: "file" },
+        { name: "Jesko", image: "file" },
+        { name: "Gemera", image: "file" },
+        { name: "Huayra", image: "file" },
+        { name: "Zonda", image: "file" }
+            ];
+        btnCar.addEventListener("click", () => {
+            const randomCar = cars[Math.floor(Math.random() * cars.length)];
+            carName.textContent = randomCar.name;
+            carImage.src = randomCar.image;
+            carImage.style.display = "block";
+        });
+    </script>
+</body>
+</html>

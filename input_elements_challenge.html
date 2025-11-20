@@ -66,9 +66,9 @@
         <h2>Part 3: Checkbox and Radio Buttons</h2>
         <label><input type="checkbox" id="subscribeBox"> Subscribe to newsletter</label>
         <p>Pick a mode:</p>
-        <label><input type="radio" name="mode" value="Light"> Light</label>
-        <label><input type="radio" name="mode" value="Dark"> Dark</label>
-        <label><input type="radio" name="mode" value="System" checked> System</label>
+        <label><input type="radio" name="mode" id="lightMode" value="Light"> Light</label>
+        <label><input type="radio" name="mode" id="darkMode" value="Dark"> Dark</label>
+        <label><input type="radio" name="mode" id="systemMode" value="System" checked> System</label>
         <button id="btnSubmit">Submit</button>
         <div class="output" id="modeOutput"></div>
     </section>
@@ -98,7 +98,7 @@
                 // TODO: Update the background color of colorOutput whenever the color input changes.
         // Challenge: Also display the hex code and volume value dynamically.
         colorInput.addEventListener("input", () => {
-            let color + colorInput.value
+            let color = colorInput.value
             colorOutput.style.backroundColor +color;
         });
 
@@ -108,6 +108,7 @@
         const modeOutput = document.getElementById("modeOutput");
 
         btnSubmit.addEventListener("click", () => {
+            let
             // TODO: Find which radio button is checked and display it.
             // Challenge: Include whether the user subscribed or not.
         });
