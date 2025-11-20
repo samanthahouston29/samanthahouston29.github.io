@@ -147,6 +147,10 @@
         { name: "Huayra", image: "file" },
         { name: "Zonda", image: "file" }
             ];
+        cars.forEach(car => {
+            const img = new Image();
+            img.src = car.image;
+        });
         btnCar.addEventListener("click", () => {
             const randomCar = cars[Math.floor(Math.random() * cars.length)];
             carName.textContent = randomCar.name;
