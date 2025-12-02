@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container { max-width: 650px; margin: 2rem auto; padding: 1rem; background: rgba(255,255,255,.8); border-radius: 8px; border: none !important; }
+        label { display:block; margin-top: 10px; }
+        input[type=text] { width: 100%; max-width: 360px; font-size: 1rem; padding: .5rem; border: 1px solid #ccc; border-radius: 6px; }
+        button { margin-top: 1rem; padding: .6rem 1rem; font-size: 1rem; border: 1px solid #666; border-radius: 6px; background: #fff; cursor: pointer; }
+        .status { margin-top: 1rem; font-weight: 700; }
+        .time-left { font-size: 2rem; color: var(--accent); }
+        .progress { height: 18px; width: 100%; background: #eee; border-radius: 8px; overflow: hidden; margin-top: .75rem; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #4caf50, #0b7dda); width: 0%; transition: width 0.2s linear; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Class Time Tracker</h1>
+        <p>Type the day (e.g. Monday or Mon) and the period number (e.g. 1) then press <strong>Start Tracking</strong>.</p>
+
+        <label for="day">Day</label>
+        <input id="day" type="text" placeholder="ex: Monday or Mon" />
+
+        <label for="period">Period</label>
+        <input id="period" type="text" placeholder="ex: 1" />
+
+        <div>
+            <button id="startBtn">Start Tracking</button>
+            <button id="stopBtn" disabled>Stop</button>
+        </div>
+
+        <div class="status" id="status">Status: idle</div>
+        <div class="time-left" id="timeLeft">00:00:00</div>
+        <div class="progress">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <script>
+        // Schedule mapping: periods (1..7) -> [startTime, endTime] in 24h HH:MM format
+        // Use a basic default schedule; you can edit this to match your school's schedule.
+        const defaultSchedule = {
+            monday: {1:["08:00","08:50"],2:["08:55","09:45"],3:["09:50","10:40"],4:["10:45","11:35"],5:["11:40","12:30"],6:["12:35","13:25"],7:["13:30","14:20"]},
+            tuesday: {1:["08:00","08:50"],2:["08:55","09:45"],3:["09:50","10:40"],4:["10:45","11:35"],5:["11:40","12:30"],6:["12:35","13:25"],7:["13:30","14:20"]},
+            wednesday: {1:["08:00","08:50"],2:["08:55","09:45"],3:["09:50","10:40"],4:["10:45","11:35"],5:["11:40","12:30"],6:["12:35","13:25"],7:["13:30","14:20"]},
+            thursday: {1:["08:00","08:50"],2:["08:55","09:45"],3:["09:50","10:40"],4:["10:45","11:35"],5:["11:40","12:30"],6:["12:35","13:25"],7:["13:30","14:20"]},
+            friday: {1:["08:00","08:50"],2:["08:55","09:45"],3:["09:50","10:40"],4:["10:45","11:35"],5:["11:40","12:30"],6:["12:35","13:25"],7:["13:30","14:20"]}
+        };
+
+        const dayInput = document.getElementById('day');
+        const periodInput = document.getElementById('period');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const statusEl = document.getElementById('status');
+        const timeLeftEl = document.getElementById('timeLeft');
+        const progressFill = document.getElementById('progressFill');
+
+        let timerInterval = null;
+
+        function normalizeDay(input) {
+            if(!input) return null;
+            const s = input.trim().toLowerCase();
+            if(!s) return null;
+            if(s.startsWith('mon')) return 'monday';
+            if(s.startsWith('tue')) return 'tuesday';
+            if(s.startsWith('wed')) return 'wednesday';
+            if(s.startsWith('thu')) return 'thursday';
+            if(s.startsWith('fri')) return 'friday';
+            if(s.startsWith('sat')) return 'saturday';
+            if(s.startsWith('sun')) return 'sunday';
+            return s; // fallback
+        }
+
+        function toDateForDayAndTime(dayName, timeStr) {
+            // Determine the next date for the given day name at timeStr
+            const now = new Date();
+            const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+            const targetIndex = days.indexOf(dayName);
+            if(targetIndex === -1) return null;
+            const todayIndex = now.getDay();
+            let daysUntil = (targetIndex - todayIndex + 7) % 7; // 0 means today
+            // if the target day is today but the time has passed, keep it as today — we let caller decide
+            const [hh, mm] = timeStr.split(':').map(x => parseInt(x,10));
+            const dt = new Date(now.getFullYear(), now.getMonth(), now.getDate()+daysUntil, hh, mm, 0, 0);
+            // if dt < now and daysUntil==0, dt points to earlier today
+            return dt;
+        }
+
+        function formatDuration(ms) {
+            if(ms < 0) ms = 0;
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return [hours, minutes, seconds].map(n => String(n).padStart(2,'0')).join(':');
+        }
+
+        function updateUIFor(times) {
+            // times: {start: Date, end: Date}
+            const now = new Date();
+            if(now < times.start) {
+                const msToStart = times.start - now;
+                statusEl.textContent = `Status: Not started — class begins at ${times.start.toLocaleTimeString()}`;
+                timeLeftEl.textContent = 'Starts in ' + formatDuration(msToStart);
+                progressFill.style.width = '0%';
+            } else if(now >= times.start && now <= times.end) {
+                const msLeft = times.end - now;
+                const totalMs = times.end - times.start;
+                const elapsed = now - times.start;
+                const pct = Math.max(0, Math.min(100, Math.round((elapsed / totalMs) * 100)));
+                statusEl.textContent = `Status: In class — ends at ${times.end.toLocaleTimeString()}`;
+                timeLeftEl.textContent = 'Time left: ' + formatDuration(msLeft);
+                progressFill.style.width = pct + '%';
+            } else {
+                statusEl.textContent = `Status: Period finished (ended at ${times.end.toLocaleTimeString()}).`;
+                timeLeftEl.textContent = '00:00:00';
+                progressFill.style.width = '100%';
+            }
+        }
+
+        function startTracking() {
+            const dayValue = normalizeDay(dayInput.value || "");
+            const periodValue = (periodInput.value || '').trim();
+            const pNum = parseInt(periodValue, 10);
+            if(!dayValue || !pNum || isNaN(pNum)) {
+                statusEl.textContent = 'Status: Enter a valid day and period number.';
+                return;
+            }
+            const schedule = defaultSchedule[dayValue];
+            if(!schedule) {
+                statusEl.textContent = 'Status: No schedule for that day. Try a weekday like Monday.';
+                return;
+            }
+            const timesForPeriod = schedule[pNum];
+            if(!timesForPeriod) {
+                statusEl.textContent = `Status: Period ${pNum} not found for ${dayValue}.`;
+                return;
+            }
+            const startDt = toDateForDayAndTime(dayValue, timesForPeriod[0]);
+            const endDt = toDateForDayAndTime(dayValue, timesForPeriod[1]);
+            if(startDt === null || endDt === null) {
+                statusEl.textContent = 'Status: Could not parse times.';
+                return;
+            }
+
+            // If the start date is in the past and the day wasn't today, use the next week's day
+            const now = new Date();
+            // If the provided day is today but the end already passed, we will report finished
+
+            // Enable/disable buttons
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+
+            // Create an updater
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => updateUIFor({start: startDt, end: endDt}), 1000);
+            // one immediate update
+            updateUIFor({start: startDt, end: endDt});
+        }
+
+        function stopTracking() {
+            if(timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            statusEl.textContent = 'Status: idle';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            timeLeftEl.textContent = '00:00:00';
+            progressFill.style.width = '0%';
+        }
+
+        startBtn.addEventListener('click', startTracking);
+        stopBtn.addEventListener('click', stopTracking);
+
+        // Pre-fill day with today's weekday name and period 1
+        (function setDefaultInputs(){
+            const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+            const now = new Date();
+            dayInput.value = days[now.getDay()];
+            periodInput.value = '1';
+        })();
+    </script>
+</body>
+</html>
