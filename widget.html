@@ -157,6 +157,13 @@
             carImage.src = randomCar.image;
             carImage.style.display = "block";
         });
+
+        document.addEventListener('keydown', () => {
+            const randomCar = cars[Math.floor(Math.random() * cars.length)];
+            carName.textContent = randomCar.name;
+            carImage.src = randomCar.image;
+            carImage.style.display = "block";
+        });
     </script>
 </body>
 </html>
