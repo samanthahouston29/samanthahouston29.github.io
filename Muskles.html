@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Muskles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: system-ui, -apple-system, "DM Serif Text", Roboto, "DM Serif Text", sans-serif; padding: 24px; max-width:900px; margin:auto; }
+        h1 { text-align:center; margin-bottom:18px; }
+        .grid { display:flex; gap:20px; flex-wrap:wrap; }
+        .card { flex:1 1 320px; border:1px solid #c2c2c2; border-radius:8px; padding:16px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+        .today { border-color:#000000; }
+        ul { padding-left:1.1rem; margin:8px 0 0 0; }
+        .week-list { list-style:none; padding:0; margin:0; }
+        .week-list li { padding:8px 10px; border-radius:6px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; }
+        .week-list li.today { background:#c2c2c2; font-weight:600; border:1px solid #c6e0ff; }
+        .day-name { color:#333; }
+        .workout-name { color:#555; font-size:0.95rem; }
+        .small { font-size:0.9rem; color:#666; margin-top:8px; }
+    </style>
+</head>
+<body>
+    <h1>Workout Helper</h1>
+    <p>Note: This is not mine and currently learning the AI made code. Also for personal use at home lol.</p>
+    <div class="grid">
+        <div class="card today" id="todayCard">
+            <h2 id="todayTitle">Today's Workout</h2>
+            <ul id="todayList"></ul>
+            <p class="small" id="todayNote"></p>
+        </div>
+
+        <div class="card">
+            <h2>Weekly Plan</h2>
+            <ul class="week-list" id="weekList"></ul>
+            <p class="small">Mon–Fri are targeted workouts. Sat/Sun: rest or active recovery.</p>
+        </div>
+    </div>
+
+    <script>
+        const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+        const schedule = {
+            1: {
+                title: 'Full Arm Day — Dumbbells + Bodyweight',
+                exercises: [
+                    'Dumbbell Bicep Curls — 3 x 10–12',
+                    'Hammer Curls — 3 x 10–12',
+                    'Overhead Triceps Extensions — 3 x 10–12',
+                    'Dips (Bench or Parallel) — 3 x 8–12',
+                    'Diamond Push-ups — 3 x max reps'
+                ],
+                note: 'Focus on slow eccentric control and full range of motion.'
+            },
+            2: {
+                title: 'Chest — Dumbbells + Bodyweight',
+                exercises: [
+                    'Dumbbell Bench Press or Floor Press — 4 x 6–10',
+                    'Incline Dumbbell Press (or incline push-ups) — 3 x 8–12',
+                    'Push-ups (standard/decline) — 3 x max reps',
+                    'Chest Fly (dumbbells) or wide push-ups — 3 x 10–12'
+                ],
+                note: 'Pair a heavy compound with bodyweight finishing sets.'
+            },
+            3: {
+                title: 'Back — Dumbbells + Bodyweight',
+                exercises: [
+                    'Single-Arm Dumbbell Row — 4 x 8–12 each side',
+                    'Reverse Fly (dumbbells) — 3 x 12–15',
+                    'Supermans or Inverted Rows (if available) — 3 x 10–15',
+                    'Deadlift variation (romanian with dumbbells) — 3 x 6–10'
+                ],
+                note: 'Grip and full scapular retraction are key.'
+            },
+            4: {
+                title: 'Full Abs / Core',
+                exercises: [
+                    'Plank — 3 x 45–90s',
+                    'Hanging or Knee Raises — 3 x 10–15',
+                    'Russian Twists (weight optional) — 3 x 20 total',
+                    'Side Plank — 2 x 30–60s each side'
+                ],
+                note: 'Control tempo; avoid using momentum.'
+            },
+            5: {
+                title: 'Legs — Dumbbells + Bodyweight',
+                exercises: [
+                    'Goblet Squat — 4 x 8–12',
+                    'Reverse Lunges — 3 x 8–12 each leg',
+                    'Romanian Deadlift (dumbbells) — 3 x 8–12',
+                    'Calf Raises — 3 x 15–20'
+                ],
+                note: 'Use full depth and focus on balance for unilateral moves.'
+            },
+            0: {
+                title: 'Rest / Active Recovery',
+                exercises: ['Light walk, mobility work, stretching or foam rolling.'],
+                note: 'Optional: light cardio 20–30 minutes.'
+            },
+            6: {
+                title: 'Rest / Active Recovery',
+                exercises: ['Light walk, mobility work, stretching or foam rolling.'],
+                note: 'Optional: light cardio 20–30 minutes.'
+            }
+        };
+
+        function renderToday() {
+            const d = new Date();
+            const dayIndex = d.getDay(); // 0 = Sun, 1 = Mon, ...
+            const today = schedule[dayIndex] || schedule[0];
+
+            document.getElementById('todayTitle').textContent = weekdays[dayIndex] + ' — ' + today.title;
+
+            const list = document.getElementById('todayList');
+            list.innerHTML = '';
+            today.exercises.forEach(ex => {
+                const li = document.createElement('li');
+                li.textContent = ex;
+                list.appendChild(li);
+            });
+
+            document.getElementById('todayNote').textContent = today.note || '';
+            renderWeekList(dayIndex);
+        }
+
+        function renderWeekList(todayIndex) {
+            const ul = document.getElementById('weekList');
+            ul.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const li = document.createElement('li');
+                if (i === todayIndex) li.classList.add('today');
+
+                const name = document.createElement('span');
+                name.className = 'day-name';
+                name.textContent = weekdays[i];
+
+                const wname = document.createElement('span');
+                wname.className = 'workout-name';
+                wname.textContent = schedule[i].title;
+
+                li.appendChild(name);
+                li.appendChild(wname);
+                ul.appendChild(li);
+            }
+
+            // Add weekend entries
+            const sunLi = document.createElement('li');
+            if (todayIndex === 0) sunLi.classList.add('today');
+            sunLi.innerHTML = `<span class="day-name">Sunday</span><span class="workout-name">${schedule[0].title}</span>`;
+            ul.appendChild(sunLi);
+
+            const satLi = document.createElement('li');
+            if (todayIndex === 6) satLi.classList.add('today');
+            satLi.innerHTML = `<span class="day-name">Saturday</span><span class="workout-name">${schedule[6].title}</span>`;
+            ul.appendChild(satLi);
+        }
+
+        renderToday();
+    </script>
+</body>
+</html>
