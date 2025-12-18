@@ -7,7 +7,7 @@
 }
 
 * {
-    border: 2px solid blue;
+    border: 2px solid rgb(0, 0, 0);
     border-radius: 1.5cap;
     padding-top: 1ch;
     padding-bottom: 1ch;
@@ -19,7 +19,7 @@
 body {
     color: var(--text);
     background: var(--background);
-    font-family: "Racing Sans One"
+    font-family: "DM Serif Text"
 }
 
 h1,
@@ -27,7 +27,7 @@ h2,
 h3
 {
 color: var(--primary);
-font-family: "Racing Sans One"
+font-family: "DM Serif Text"
 }
 
 li,
